@@ -5,7 +5,11 @@ import utc from "dayjs/plugin/utc";
 dayjs.extend(utc);
 
 import PSEHeader from "./containers/PSEHeader";
+import { formatProductionItems } from "./utils/recipe.utils";
+import { productionItems } from "./utils/data/recipes";
 
+const formattedRecipes = formatProductionItems(productionItems);
+console.log("formattedRecipes", formattedRecipes);
 const App = () => {
   return (
     <Box
