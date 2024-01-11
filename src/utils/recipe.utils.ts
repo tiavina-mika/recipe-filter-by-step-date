@@ -1,4 +1,6 @@
 import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
+dayjs.extend(isBetween);
 
 export const formatProductionItems = (productionItems) => {
   return productionItems.map((productionItem) => {
@@ -24,26 +26,63 @@ const removeSteps = ({
   endDate,
   prevStartDate,
   nextEndDate,
-  recipe
+  recipe,
+  productionDate
 }) => {
   const filtteredSteps = [];
   for (const productionStep of productionSteps) {
     const step = productionStep.step;
     const startDate1 = dayjs(prevStartDate)
-      .utc()
+      // .utc()
       .add(+step.stepDate, "days")
       .startOf("day")
       .valueOf();
     const endDate1 = dayjs(nextEndDate)
-      .utc()
+      // .utc()
       .add(-step.stepDate, "days")
       .endOf("day")
       .valueOf();
 
+    const prevDayProductionDate = dayjs(productionDate)
+      .add(-1, "days")
+      .startOf("day")
+      .valueOf();
+    const nextDayProductionDate = dayjs(productionDate)
+      .add(1, "days")
+      .startOf("day")
+      .valueOf();
+
+    const isSameAsEndDate = dayjs(prevDayProductionDate).isSame(
+      dayjs(endDate).utc(),
+      "days"
+    );
+    const isSameAsStartDate = dayjs(nextDayProductionDate).isSame(
+      dayjs(startDate).utc(),
+      "days"
+    );
+
+    const stepProductionDate = dayjs(productionDate)
+      .add(step.stepDate, "days")
+      .startOf("day")
+      .valueOf();
+
+    const isOk2 = dayjs(stepProductionDate).isBetween(
+      dayjs(startDate).utc().startOf("day"),
+      dayjs(endDate).utc().endOf("day"),
+      "day",
+      "[]"
+    );
+    // const isOk2 = stepProductionDate >= startDate && stepProductionDate <= endDate
+
     if (
       !step.productionSteps &&
-      recipe.name === "Création PSE - Recette B" &&
-      Math.round(dayjs(endDate1).diff(endDate, "day", true)) !== step.stepDate
+      recipe.name === "Changement statuts PSE - Recette C"
+      // recipe.name === "Création PSE - Recette B"
+
+      // (
+      //   Math.round(dayjs(endDate1).diff(endDate, "day", true)) !== step.stepDate
+      //   // || Math.round(dayjs(startDate1).diff(startDate, "day", true)) !== step.stepDate
+      // )
     ) {
       console.log({
         objectId: step.objectId,
@@ -54,6 +93,26 @@ const removeSteps = ({
         stepComponent2:
           step.stepComponents?.[0]?.priorSteps?.stepComponents?.[0]
             ?.supplierItem?.name,
+        productionDate: dayjs(productionDate)
+          .startOf("day")
+          .format("DD/MM/YYYY HH:mm"),
+        stepProductionDate: dayjs(stepProductionDate)
+          .startOf("day")
+          .format("DD/MM/YYYY HH:mm"),
+        prevDayProductionDate: dayjs(prevDayProductionDate).format(
+          "DD/MM/YYYY HH:mm"
+        ),
+        nextDayProductionDate: dayjs(nextDayProductionDate).format(
+          "DD/MM/YYYY HH:mm"
+        ),
+        // isSamePrev: dayjs(prevDayProductionDate).isSame(dayjs(endDate).utc(), "days"),
+        isSameAsEndDate,
+        isSameAsStartDate,
+        isOk:
+          (isSameAsEndDate && !isSameAsStartDate) ||
+          (isSameAsStartDate && !isSameAsEndDate),
+        isOk2: isOk2,
+        // productionDate: dayjs(productionDate).endOf("day").format("DD/MM/YYYY HH:mm"),
         startDate: dayjs(startDate).format("DD/MM/YYYY HH:mm"),
         endDate: dayjs(endDate).format("DD/MM/YYYY HH:mm"),
         prevStartDate: dayjs(startDate1).format("DD/MM/YYYY HH:mm"),
@@ -80,10 +139,15 @@ export const getProductionStepsByStepDate = ({
         endDate,
         prevStartDate,
         nextEndDate,
-        recipe: productionItem.recipe
+        recipe: productionItem.recipe,
+        productionDate: productionItem.productionDate
       });
     }
   }
 
+  // const a = false; const b = true;
+  // const a = false; const b = true;
+  // console.log("-------------", (a && !b) || (b && !a))
   console.log("-------------");
+  // dayjs(1704067200000).utc().isSame(dayjs(1704067200000).utc(), "day"));
 };

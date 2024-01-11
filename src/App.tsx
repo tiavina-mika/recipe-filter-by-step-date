@@ -11,7 +11,7 @@ import {
 } from "./utils/recipe.utils";
 import { productionItems } from "./utils/data/recipes";
 
-const endDate = 1706659200000;
+const endDate = 1703980800000;
 const startDate = 1703894400000;
 const prevStartDate = dayjs(startDate).add(-1, "days").startOf("day").valueOf();
 const nextEndDate = dayjs(endDate).add(1, "days").endOf("day").valueOf();
