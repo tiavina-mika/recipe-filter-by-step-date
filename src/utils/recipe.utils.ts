@@ -67,29 +67,33 @@ const removeSteps = ({
     });
 
     if (
-      !step.productionSteps &&
-      recipe.name === "Changement statuts PSE - Recette C"
+      // !step.productionSteps &&
+      // // recipe.name === "Changement statuts PSE - Recette C"
       // recipe.name === "Création PSE - Recette B"
+      isAcceptedStepProductionDate
     ) {
-      console.log({
-        objectId: step.objectId,
-        recipe: recipe.name,
-        step: step.name,
-        dayDiff: step.stepDate,
-        stepComponent: step.stepComponents?.[0]?.supplierItem?.name,
-        stepComponent2:
-          step.stepComponents?.[0]?.priorSteps?.stepComponents?.[0]
-            ?.supplierItem?.name,
-        productionDate: dayjs(productionDate)
-          .startOf("day")
-          .format("DD/MM/YYYY HH:mm"),
-        stepProductionDate: dayjs(stepProductionDate)
-          .startOf("day")
-          .format("DD/MM/YYYY HH:mm"),
-        isAcceptedStepProductionDate,
-        startDate: dayjs(neStartDate).format("DD/MM/YYYY HH:mm"),
-        endDate: dayjs(newEndDate).format("DD/MM/YYYY HH:mm")
-      });
+      console.log(
+        [dayjs(stepProductionDate).startOf("day").format("DD/MM/YYYY HH:mm")],
+        {
+          objectId: step.objectId,
+          recipe: recipe.name,
+          step: step.name,
+          dayDiff: step.stepDate,
+          stepComponent: step.stepComponents?.[0]?.supplierItem?.name,
+          stepComponent2:
+            step.stepComponents?.[0]?.priorSteps?.stepComponents?.[0]
+              ?.supplierItem?.name,
+          productionDate: dayjs(productionDate)
+            .startOf("day")
+            .format("DD/MM/YYYY HH:mm"),
+          stepProductionDate: dayjs(stepProductionDate)
+            .startOf("day")
+            .format("DD/MM/YYYY HH:mm"),
+          isAcceptedStepProductionDate,
+          startDate: dayjs(neStartDate).format("DD/MM/YYYY HH:mm"),
+          endDate: dayjs(newEndDate).format("DD/MM/YYYY HH:mm")
+        }
+      );
     }
   }
 
