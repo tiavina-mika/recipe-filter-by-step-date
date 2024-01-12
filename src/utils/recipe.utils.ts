@@ -2,6 +2,26 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 dayjs.extend(utc);
 
+const getStepProductionDateBetweenDates = ({
+  startDate,
+  endDate,
+  productionDate,
+  stepDate = 0
+}) => {
+  const newEndDate = dayjs(endDate).endOf("day").valueOf();
+  const newStartDate = dayjs(startDate).startOf("day").valueOf();
+
+  const stepProductionDate = dayjs(productionDate)
+    .add(stepDate, "days")
+    .startOf("day")
+    .valueOf();
+
+  const isAcceptedStepProductionDate =
+    stepProductionDate >= newStartDate && stepProductionDate <= newEndDate;
+
+  return isAcceptedStepProductionDate;
+};
+
 export const formatProductionItems = (productionItems) => {
   return productionItems.map((productionItem) => {
     return {
@@ -19,7 +39,6 @@ export const formatProductionItems = (productionItems) => {
 };
 
 /* @ts-ignore */
-
 const removeSteps = ({
   productionSteps = [],
   startDate,
@@ -31,16 +50,21 @@ const removeSteps = ({
   for (const productionStep of productionSteps) {
     const step = productionStep.step;
 
+    // ------- just for log ------- //
     const newEndDate = dayjs(endDate).endOf("day").valueOf();
     const neStartDate = dayjs(startDate).startOf("day").valueOf();
-
     const stepProductionDate = dayjs(productionDate)
       .add(step.stepDate, "days")
       .startOf("day")
       .valueOf();
+    // ------- just for log ------- //
 
-    const isAcceptedStepProductionDate =
-      stepProductionDate >= neStartDate && stepProductionDate <= newEndDate;
+    const isAcceptedStepProductionDate = getStepProductionDateBetweenDates({
+      startDate,
+      endDate,
+      productionDate,
+      stepDate: step.stepDate
+    });
 
     if (
       !step.productionSteps &&
