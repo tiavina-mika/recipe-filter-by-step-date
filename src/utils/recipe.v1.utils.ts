@@ -34,6 +34,15 @@ const removeSteps = ({
     const newEndDate = dayjs(endDate).endOf("day").valueOf();
     const neStartDate = dayjs(startDate).startOf("day").valueOf();
 
+    // const prevDayProductionDate = dayjs(productionDate)
+    //   .add(-1, "days")
+    //   .startOf("day")
+    //   .valueOf();
+    // const nextDayProductionDate = dayjs(productionDate)
+    //   .add(1, "days")
+    //   .startOf("day")
+    //   .valueOf();
+
     const stepProductionDate = dayjs(productionDate)
       .add(step.stepDate, "days")
       .startOf("day")
@@ -62,6 +71,12 @@ const removeSteps = ({
         stepProductionDate: dayjs(stepProductionDate)
           .startOf("day")
           .format("DD/MM/YYYY HH:mm"),
+        // prevDayProductionDate: dayjs(prevDayProductionDate).format(
+        //   "DD/MM/YYYY HH:mm"
+        // ),
+        // nextDayProductionDate: dayjs(nextDayProductionDate).format(
+        //   "DD/MM/YYYY HH:mm"
+        // ),
         isAcceptedStepProductionDate,
         startDate: dayjs(neStartDate).format("DD/MM/YYYY HH:mm"),
         endDate: dayjs(newEndDate).format("DD/MM/YYYY HH:mm")
@@ -74,7 +89,9 @@ const removeSteps = ({
 export const getProductionStepsByStepDate = ({
   productionItems,
   startDate,
-  endDate
+  endDate,
+  prevStartDate,
+  nextEndDate
 }) => {
   for (const productionItem of productionItems) {
     for (const section of productionItem.recipe.sections) {
@@ -82,6 +99,8 @@ export const getProductionStepsByStepDate = ({
         productionSteps: section.productionSteps,
         startDate,
         endDate,
+        prevStartDate,
+        nextEndDate,
         recipe: productionItem.recipe,
         productionDate: productionItem.productionDate
       });
