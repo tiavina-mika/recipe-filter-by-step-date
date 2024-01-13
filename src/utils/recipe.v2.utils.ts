@@ -22,26 +22,6 @@ const getStepProductionDateBetweenDates = ({
   return isAcceptedStepProductionDate;
 };
 
-const getIsValidDates = ({
-  startDate,
-  endDate,
-  productionDates,
-  stepDate = 0
-}) => {
-  const newEndDate = dayjs(endDate).endOf("day").valueOf();
-  const newStartDate = dayjs(startDate).startOf("day").valueOf();
-
-  const stepProductionDate = dayjs(productionDate)
-    .add(stepDate, "days")
-    .startOf("day")
-    .valueOf();
-
-  const isAcceptedStepProductionDate =
-    stepProductionDate >= newStartDate && stepProductionDate <= newEndDate;
-
-  return isAcceptedStepProductionDate;
-};
-
 export const formatProductionItems = (productionItems) => {
   return productionItems.map((productionItem) => {
     return {
